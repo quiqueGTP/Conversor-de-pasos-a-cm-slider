@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Slider de robot</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1em;
+    }
+    input {
+      width: 200px;
+      text-align: center;
+    }
+    button {
+      background-color: #444;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #666;
+    }
+    #resultado {
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: red;
+    }
+    table {
+      margin: 40px auto;
+      border-collapse: collapse;
+      width: 70%;
+      background: #111;
+    }
+    th, td {
+      border: 1px solid #555;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background: #222;
+    }
+  </style>
+</head>
+<body>
+  <h1>Slider de robot</h1>
+  <p>Ingresa la distancia en <b>centímetros</b> que deseas mover:</p>
+  <input type="number" id="distancia" placeholder="cm">
+  <button onclick="calcular()">Calcular pasos y tiempo</button>
+  
+  <div id="resultado"></div>
+
+  <h2>Configuración del Controlador</h2>
+  <table>
+    <tr><th>Parámetro</th><th>Valor</th></tr>
+    <tr><td>Microstepping</td><td>1600</td></tr>
+    <tr><td>JogSpd</td><td>5000 mm/min</td></tr>
+    <tr><td>Jog+Distance</td><td>1000 mm/min</td></tr>
+    <tr><td>StartSpd</td><td>Ej. 500 mm/min</td></tr>
+    <tr><td>Accel/Decel</td><td>Ej. 200 ms (rampa)</td></tr>
+    <tr><td>SHspd</td><td>Ej. 6000 mm/min</td></tr>
+    <tr><td>Man Hspd</td><td>Ej. 4000 mm/min</td></tr>
+    <tr><td>Man Lspd</td><td>Ej. 500 mm/min</td></tr>
+    <tr><td>Go Home High Speed (BZHSpd)</td><td>Ej. 3000 mm/min</td></tr>
+    <tr><td>Go Home Low Speed (BZLSpd)</td><td>Ej. 500 mm/min</td></tr>
+  </table>
+
+  <script>
+    // Constante de pasos por mm (con piñón 17 dientes, pitch 11mm, microstep 1600)
+    const stepsPorMM = 7.476;
+
+    // Datos de configuración (ejemplo, ajusta a tu máquina real)
+    const velocidadTrabajo = 5000; // mm/min (JogSpd)
+
+    function calcular() {
+      const cm = parseFloat(document.getElementById("distancia").value);
+      if (isNaN(cm) || cm <= 0) {
+        document.getElementById("resultado").innerHTML = "Ingresa un valor válido.";
+        return;
+      }
+
+      const mm = cm * 10;
+      const steps = mm * stepsPorMM;
+
+      // Tiempo estimado = distancia / velocidad (simplificado)
+      const tiempoMin = mm / velocidadTrabajo; // minutos
+      const tiempoSeg = tiempoMin * 60; // segundos
+
+      document.getElementById("resultado").innerHTML = 
+        "Pasos requeridos: <b>" + steps.toFixed(0) + "</b><br>" +
+        "Tiempo estimado: <b>" + tiempoSeg.toFixed(2) + " s</b>";
+    }
+  </script>
+</body>
+</html>
